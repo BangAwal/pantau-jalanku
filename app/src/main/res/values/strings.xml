@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Pantau Jalanku</string>
+    <string name="pantau_jalanku">Pantau Jalanku</string>
+    <string name="description">Lets Report the Road Damage</string>
+    <string name="or">OR</string>
+    <string name="login">LOGIN</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="or_login_with_email">OR LOGIN WITH EMAIL</string>
+    <string name="continue_with_google">CONTINUE WITH GOOGLE</string>
+    <string name="create_your_account">Create Your Account!</string>
+    <string name="verify_password">Verify Password</string>
+    <string name="get_started">GET STARTED</string>
+    <string name="username">Username</string>
+    <string name="your_location">Your Location</string>
+    <string name="features">Features</string>
+    <string name="report">Report</string>
+    <string name="map">Map</string>
+    <string name="profile">Profile User</string>
+    <string name="about_app">About App</string>
+    <string name="home">Home</string>
+    <string name="hai_username">Hai, Username</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="enter_your_location">Enter Your Location</string>
+    <string name="upload">Upload</string>
+    <string name="change_password">Change Password</string>
+    <string name="save_change">Save Change</string>
+    <string name="sign_out">SIGN OUT</string>
+
+    <string name="info">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

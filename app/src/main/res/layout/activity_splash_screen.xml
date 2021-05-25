@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple"
+    android:gravity="center"
+    android:orientation="horizontal"
+    tools:context=".SplashScreenActivity">
+
+    <ImageView
+        android:id="@+id/pj_round_icon"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/pj_round"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_pj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="@string/pantau_jalanku"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+</LinearLayout>
