@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.maulida.pantaujalanku.databinding.ActivityMainBinding
+import com.maulida.pantaujalanku.ui.sign.LoginActivity
+import com.maulida.pantaujalanku.ui.sign.SignUpActivity
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 

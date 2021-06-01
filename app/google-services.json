@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "23288462892",
+    "project_id": "pantau-jalanku",
+    "storage_bucket": "pantau-jalanku.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23288462892:android:3aff7366790ade87391b89",
+        "android_client_info": {
+          "package_name": "com.maulida.pantaujalanku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23288462892-570mua9kkrpk9j4ssc8b4ac33q76eug1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maulida.pantaujalanku",
+            "certificate_hash": "4325da46955984dd7731206e0969440ea1e787f6"
+          }
+        },
+        {
+          "client_id": "23288462892-745da9j7oi6f77rbvgn9vt8rr98v34b3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgHxCQSj3NtYsyEqteslN7pYXiHVXsX-4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23288462892-745da9j7oi6f77rbvgn9vt8rr98v34b3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

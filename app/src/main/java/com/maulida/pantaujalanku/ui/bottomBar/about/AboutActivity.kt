@@ -1,4 +1,4 @@
-package com.maulida.pantaujalanku.ui
+package com.maulida.pantaujalanku.ui.bottomBar.about
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

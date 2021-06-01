@@ -1,4 +1,4 @@
-package com.maulida.pantaujalanku.ui
+package com.maulida.pantaujalanku.ui.bottomBar.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
