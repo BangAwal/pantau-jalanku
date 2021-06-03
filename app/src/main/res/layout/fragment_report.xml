@@ -35,12 +35,12 @@
         android:id="@+id/tv_hai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/hai_username"
         android:textColor="@color/white"
         android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_title" />
 
@@ -54,6 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_hai" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout"

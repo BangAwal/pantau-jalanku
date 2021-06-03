@@ -18,6 +18,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
@@ -25,6 +27,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.firebase.firestore.FirebaseFirestore
 import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
 import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.databinding.ActivityMapBinding
@@ -43,6 +46,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mFusedLocationProviderClient : FusedLocationProviderClient
     private lateinit var mMap : GoogleMap
     private lateinit var binding : ActivityMapBinding
+    private lateinit var firestore : FirebaseFirestore
 
     private var isLocatePermission = false
 
@@ -54,9 +58,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         Places.initialize(this, "${MAPS_API_KEY}")
         Places.isInitialized()
 
+        firestore = FirebaseFirestore.getInstance()
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
         getLocationPermission()
 
-//        autoCompletePlaces()
     }
 
     private fun initMap(){
@@ -107,7 +114,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val sydney = LatLng(-34.0, 151.0)
         if (isLocatePermission) {
             getDeviceLocation()
             if (ActivityCompat.checkSelfPermission(this,
@@ -121,6 +127,24 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap?.isMyLocationEnabled = true
             mMap?.uiSettings?.isMyLocationButtonEnabled = false
 
+            //marker potholes
+            firestore.collection("report")
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful){
+                            for (document in task.result){
+                                val latitude : Double = document.data.getValue("latitude") as Double
+                                val longitude : Double = document.data.getValue("longitude") as Double
+                                mMap.addMarker(MarkerOptions()
+                                        .position(LatLng(latitude, longitude))
+                                        .title("Potholes")
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                        .alpha(0.8f))
+                            }
+                        }
+
+                    }
+
             init()
         }
     }
@@ -130,18 +154,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.icMagnify.setOnClickListener {
             autoCompletePlaces()
         }
-
-//        binding.searchInput.setOnEditorActionListener { v, actionId, event ->
-//            if (actionId == EditorInfo.IME_ACTION_SEARCH
-//                    || actionId == EditorInfo.IME_ACTION_DONE
-//                    || event.action == KeyEvent.ACTION_DOWN
-//                    || event.action == KeyEvent.KEYCODE_ENTER
-//                || event.action == KeyEvent.KEYCODE_SPACE) {
-//                geoLocate()
-//            }
-//
-//            false
-//        }
 
         binding.icGps.setOnClickListener {
             getDeviceLocation()
@@ -219,7 +231,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getDeviceLocation(){
         Log.d("MapActivity","getDeviceLocation : getting the current devices")
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
         try {
             val location = mFusedLocationProviderClient.lastLocation
             location.addOnCompleteListener { task ->

@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.core.data.UserEntity
+import com.maulida.pantaujalanku.core.preference.SetPreferences
+import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.ActivitySignUpBinding
+import com.maulida.pantaujalanku.ui.HomeActivity
 
 class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -21,6 +24,7 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var fireStore : FirebaseFirestore
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +33,17 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
         fireStore = FirebaseFirestore.getInstance()
 
+        userRepository = UserRepository.getInstance(SetPreferences(this))
+
+
+        if (userRepository.isUserLogin()){
+            finishAffinity()
+            startActivity(Intent(this, HomeActivity::class.java))
+        }
+
         binding.btnBack.setOnClickListener(this)
-        binding.btnCreate.setOnClickListener(this)
+        binding.btnSaveChanges.setOnClickListener(this)
+
     }
 
     override fun onClick(v: View?) {
@@ -38,7 +51,7 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btn_back -> {
                 finish()
             }
-            R.id.btn_create -> {
+            R.id.btn_save_changes -> {
                 signUp()
             }
         }
@@ -93,8 +106,13 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                                 .add(user)
                                 .addOnSuccessListener{ documentReference ->
                                     val intent = Intent(this, SignUpPhotoActivity::class.java)
-                                    intent.putExtra(SignUpPhotoActivity.EXTRA_EMAIL, documentReference.id)
+                                    userRepository.loginUser("ID_USER", documentReference.id)
+                                    userRepository.loginUser("EMAIL_USER", email)
+                                    userRepository.loginUser("USERNAME_USER", username)
+
                                     startActivity(intent)
+                                    finish()
+
                                     Toast.makeText(this, "Success Added", Toast.LENGTH_SHORT).show()
                                     Log.d("SignUpActivity", "document added with Id : ${documentReference.id}")
                                 }

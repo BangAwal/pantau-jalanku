@@ -5,53 +5,42 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
-import android.media.Image
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.PlaceLikelihood
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
-import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.core.data.ReportEntity
-import com.maulida.pantaujalanku.core.data.UserEntity
-import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.databinding.FragmentReportBinding
-import com.maulida.pantaujalanku.ui.bottomBar.map.MapActivity
-import okhttp3.internal.canParseAsIpAddress
-import java.security.acl.Permission
+import com.maulida.pantaujalanku.ml.Model
+import org.checkerframework.checker.nullness.qual.NonNull
+import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import java.nio.ByteBuffer
 import java.util.*
 
 class ReportFragment : Fragment() {
@@ -61,14 +50,16 @@ class ReportFragment : Fragment() {
     private lateinit var fireStorage: StorageReference
     private lateinit var storage: FirebaseStorage
     private lateinit var document: DocumentReference
-    private lateinit var sesi: SetPreferences
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var model : Model
 
     //atribut
     private var statusAdd = false
     private lateinit var filePathUri: Uri
     private lateinit var user: String
+    private lateinit var username: String
     private lateinit var placesClient: PlacesClient
+    private lateinit var bitmap : Bitmap
 
 
     override fun onCreateView(
@@ -85,6 +76,10 @@ class ReportFragment : Fragment() {
 
         if (activity != null) {
 
+            model = Model.newInstance(view.context)
+
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.context)
+
             Places.initialize(view.context, "${MAPS_API_KEY}")
             Places.isInitialized()
 
@@ -94,16 +89,14 @@ class ReportFragment : Fragment() {
             storage = FirebaseStorage.getInstance()
             fireStorage = storage.reference
 
-            sesi = SetPreferences(view.context)
 
             document = firestore.collection("users").document()
 
             user = arguments?.getString("ID_USER") as String
+            username = arguments?.getString("USERNAME_USER") as String
             Log.d("ReportActivity", user)
 
-            fusedLocationProviderClient =
-                LocationServices.getFusedLocationProviderClient(requireActivity())
-
+            binding.tvHai.text = "Hai, $username"
 //            getDeviceLocation()
 
             currentLocation()
@@ -115,6 +108,7 @@ class ReportFragment : Fragment() {
                     .start()
             }
 
+
             binding.btnUpload.setOnClickListener {
                 val location = binding.tvLocation.text.toString()
                 if (location.isEmpty()) {
@@ -125,6 +119,19 @@ class ReportFragment : Fragment() {
                     progressDialog.setTitle("Uploading...")
                     progressDialog.show()
 
+                    val resized = Bitmap.createScaledBitmap(bitmap, 448, 448, true)
+                    val tBuffer = TensorImage.fromBitmap(resized)
+                    var byteBuffer = tBuffer.buffer
+
+                    val image = TensorBuffer.createFixedSize(intArrayOf(1, 448, 448, 3), DataType.UINT8)
+                    image.loadBuffer(byteBuffer)
+
+                    val outputs = model.process(image)
+                    val score = outputs.scoreAsTensorBuffer
+                    val category = outputs.categoryAsTensorBuffer
+                    val loca = outputs.locationAsTensorBuffer
+                    val number = outputs.numberOfDetectionsAsTensorBuffer
+                    Log.d("resultPothole", "number : ${number.floatArray}, location : ${loca.floatArray}, score : ${score.floatArray}, ${category.floatArray}")
                     val ref = fireStorage.child("potholes/" + UUID.randomUUID().toString())
                     ref.putFile(filePathUri)
                         .addOnSuccessListener {
@@ -133,6 +140,7 @@ class ReportFragment : Fragment() {
 
                             ref.downloadUrl.addOnSuccessListener {
                                 saveToFirebase(it.toString(), location)
+
                             }
                         }
                         .addOnFailureListener {
@@ -153,43 +161,22 @@ class ReportFragment : Fragment() {
 
     }
 
+    private fun getMax(arr : FloatArray) : Int{
+        var ind = 0
+        var min = 0.0f
+
+        for (i in 0..100){
+            if (arr[i] > min){
+                min = arr[i]
+                ind = i
+            }
+        }
+        return ind
+    }
+
 
     private fun saveToFirebase(uri: String, location: String) {
 
-        val report = ReportEntity()
-        report.image = uri
-        report.location = location
-
-        firestore.collection("users/$user/report")
-            .add(report)
-            .addOnSuccessListener {
-                Log.d("ReportActivity", "DocumentSnapshot added with ID: " + it.getId())
-            }
-            .addOnFailureListener {
-                Log.w("ReportActivity", "Error adding document", it);
-            }
-    }
-
-    @Suppress("DEPRECATION")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            statusAdd = true
-            filePathUri = data?.data!!
-
-            Glide.with(view?.context!!)
-                .load(filePathUri)
-                .apply(RequestOptions().transform(RoundedCorners(50)))
-                .into(binding.imgUpload)
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(view?.context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(view?.context, "Task Cancelled....", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun getDeviceLocation() {
         if (ActivityCompat.checkSelfPermission(
                 view?.context!!,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -200,8 +187,46 @@ class ReportFragment : Fragment() {
         ) {
             return
         }
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            binding.tvLocation.setText(it.provider)
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { task ->
+
+                val report = ReportEntity()
+                report.id = user
+                report.image = uri
+                report.location = location
+                report.latitude = task.latitude
+                report.longitude = task.longitude
+
+                firestore.collection("report")
+                    .add(report)
+                    .addOnSuccessListener {
+                        Log.d("ReportFragment", "get latitude : ${task.latitude}, longitude : ${task.longitude}")
+                    }
+                    .addOnFailureListener {
+                        Log.e("ReportFragment", "Failed update data")
+                    }
+            }
+    }
+
+    @Suppress("DEPRECATION", "CAST_NEVER_SUCCEEDS")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            statusAdd = true
+            filePathUri = data?.data!!
+
+
+            bitmap = MediaStore.Images.Media.getBitmap(view?.context?.contentResolver, filePathUri)
+
+            Glide.with(view?.context!!)
+                .load(filePathUri)
+                .apply(RequestOptions().transform(RoundedCorners(100)))
+                .into(binding.imgUpload)
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(view?.context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(view?.context, "Task Cancelled....", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PantauJalanku">
-        <activity android:name=".ui.bottomBar.report.MyLocationActivity"></activity>
+        <activity android:name=".ui.bottomBar.profile.ChangePhotoProfileActivity"></activity>
         <activity android:name=".ui.sign.SignUpPhotoActivity" />
         <activity android:name=".ui.bottomBar.map.MapActivity" />
         <activity android:name=".ui.bottomBar.about.AboutActivity" />

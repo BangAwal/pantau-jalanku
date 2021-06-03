@@ -6,8 +6,6 @@ class SetPreferences(context : Context) {
 
     companion object{
         const val KEY_IS_LOGIN = "key_login"
-        const val KEY_USERNAME = "username"
-        const val KEY_ID = "id_user"
     }
 
     private val pref = context.getSharedPreferences("session", Context.MODE_PRIVATE)
