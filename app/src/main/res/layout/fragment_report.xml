@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,87 +9,92 @@
     android:background="@color/purple"
     tools:context=".ui.bottomBar.report.ReportFragment">
 
-    <LinearLayout
-        android:id="@+id/layout_title"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/layout_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:text="@string/report"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_report"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/poppins_semibold"
-            android:gravity="center"
-            android:text="@string/report"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_hai"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="@string/hai_username"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_title" />
-
-    <ImageView
-        android:id="@+id/img_upload"
-        android:layout_width="350dp"
-        android:layout_height="300dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/upload_image"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_hai" />
-
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/tv_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_round"
-            android:drawableStart="@drawable/ic_baseline_location_on_24"
-            android:fontFamily="@font/poppins"
-            android:hint="@string/enter_your_location"
-            android:inputType="textEmailAddress"
-            android:padding="15dp"
-            android:textSize="16sp" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_upload"
+            android:id="@+id/tv_hai"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:background="@drawable/button_round"
             android:fontFamily="@font/poppins_semibold"
-            android:text="@string/upload"
+            android:text="@string/hai_username"
             android:textColor="@color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_title" />
+
+        <ImageView
+            android:id="@+id/img_upload"
+            android:layout_width="350dp"
+            android:layout_height="300dp"
+            android:scaleType="fitXY"
+            android:layout_marginBottom="64dp"
+            android:src="@drawable/upload_image"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_hai" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/tv_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_round"
+                android:drawableStart="@drawable/ic_baseline_location_on_24"
+                android:fontFamily="@font/poppins"
+                android:hint="@string/enter_your_location"
+                android:inputType="textEmailAddress"
+                android:padding="15dp"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button_round"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/upload"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

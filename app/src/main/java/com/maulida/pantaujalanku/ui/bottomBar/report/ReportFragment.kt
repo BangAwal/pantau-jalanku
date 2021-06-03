@@ -35,15 +35,21 @@ import com.google.firebase.storage.StorageReference
 import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
 import com.maulida.pantaujalanku.core.data.ReportEntity
 import com.maulida.pantaujalanku.databinding.FragmentReportBinding
-import com.maulida.pantaujalanku.ml.Model
+//import com.maulida.pantaujalanku.ml.Model
 import org.checkerframework.checker.nullness.qual.NonNull
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import org.tensorflow.lite.task.vision.detector.Detection
+import org.tensorflow.lite.task.vision.detector.ObjectDetector
 import java.nio.ByteBuffer
 import java.util.*
 
 class ReportFragment : Fragment() {
+
+    companion object{
+        const val TAG = "potholeResult"
+    }
 
     private lateinit var binding: FragmentReportBinding
     private lateinit var firestore: FirebaseFirestore
@@ -51,7 +57,7 @@ class ReportFragment : Fragment() {
     private lateinit var storage: FirebaseStorage
     private lateinit var document: DocumentReference
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var model : Model
+//    private lateinit var model : Model
 
     //atribut
     private var statusAdd = false
@@ -76,7 +82,7 @@ class ReportFragment : Fragment() {
 
         if (activity != null) {
 
-            model = Model.newInstance(view.context)
+//            model = Model.newInstance(view.context)
 
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.context)
 
@@ -123,15 +129,41 @@ class ReportFragment : Fragment() {
                     val tBuffer = TensorImage.fromBitmap(resized)
                     var byteBuffer = tBuffer.buffer
 
-                    val image = TensorBuffer.createFixedSize(intArrayOf(1, 448, 448, 3), DataType.UINT8)
-                    image.loadBuffer(byteBuffer)
+//                    val image = TensorBuffer.createFixedSize(intArrayOf(1, 448, 448, 3), DataType.UINT8)
+//                    image.loadBuffer(byteBuffer)
+//
+//                    val options = ObjectDetector.ObjectDetectorOptions.builder()
+//                        .setMaxResults(5)
+//                        .setScoreThreshold(0.5f)
+//                        .build()
+//                    val detector = ObjectDetector.createFromFileAndOptions(
+//                        view.context, // the application context
+//                        "model.tflite", // must be same as the filename in assets folder
+//                        options
+//                    )
+//
+//                    val result = detector.detect(tBuffer)
 
-                    val outputs = model.process(image)
-                    val score = outputs.scoreAsTensorBuffer
-                    val category = outputs.categoryAsTensorBuffer
-                    val loca = outputs.locationAsTensorBuffer
-                    val number = outputs.numberOfDetectionsAsTensorBuffer
-                    Log.d("resultPothole", "number : ${number.floatArray}, location : ${loca.floatArray}, score : ${score.floatArray}, ${category.floatArray}")
+                    for ((i, obj) in result.withIndex()) {
+                        val box = obj.boundingBox
+
+                        Log.d(TAG, "Detected object: ${i} ")
+                        Log.d(TAG, "boundingBox: (${box.left}, ${box.top}) - (${box.right},${box.bottom})")
+
+                        for ((j, category) in obj.categories.withIndex()) {
+                            Log.d(TAG, "    Label $j: ${category.label}")
+                            val confidence: Int = category.score.times(100).toInt()
+                            Log.d(TAG, "    Confidence: ${confidence}%")
+                        }
+                    }
+
+
+//                    val outputs = model.process(image)
+//                    val score = outputs.scoreAsTensorBuffer
+//                    val category = outputs.categoryAsTensorBuffer
+//                    val loca = outputs.locationAsTensorBuffer
+//                    val number = outputs.numberOfDetectionsAsTensorBuffer
+//                    Log.d("resultPothole", "number : ${number.floatArray[0]}, location : ${loca.floatArray[0]}, score : ${score.floatArray[0]}, ${category.floatArray[0]}")
                     val ref = fireStorage.child("potholes/" + UUID.randomUUID().toString())
                     ref.putFile(filePathUri)
                         .addOnSuccessListener {
@@ -161,18 +193,51 @@ class ReportFragment : Fragment() {
 
     }
 
-    private fun getMax(arr : FloatArray) : Int{
-        var ind = 0
-        var min = 0.0f
+    private fun runObjectDetection(bitmap: Bitmap){
+//        val image = TensorBuffer.createFixedSize(intArrayOf(1, 448, 448, 3), DataType.UINT8)
+        val image = TensorImage.fromBitmap(bitmap)
+//        image.loadBuffer()
 
-        for (i in 0..100){
-            if (arr[i] > min){
-                min = arr[i]
-                ind = i
+        val options = ObjectDetector.ObjectDetectorOptions.builder()
+            .setMaxResults(5)
+            .setScoreThreshold(0.5f)
+            .build()
+        val detector = ObjectDetector.createFromFileAndOptions(
+            view?.context, // the application context
+            "model.tflite", // must be same as the filename in assets folder
+            options
+        )
+
+        val result = detector.detect(image)
+    }
+
+    private fun debugPrint(results : List<Detection>) {
+        for ((i, obj) in results.withIndex()) {
+            val box = obj.boundingBox
+
+            Log.d(TAG, "Detected object: ${i} ")
+            Log.d(TAG, "  boundingBox: (${box.left}, ${box.top}) - (${box.right},${box.bottom})")
+
+            for ((j, category) in obj.categories.withIndex()) {
+                Log.d(TAG, "    Label $j: ${category.label}")
+                val confidence: Int = category.score.times(100).toInt()
+                Log.d(TAG, "    Confidence: ${confidence}%")
             }
         }
-        return ind
     }
+//
+//    private fun getMax(arr : FloatArray) : Int{
+//        var ind = 0
+//        var min = 0.0f
+//
+//        for (i in 0..100){
+//            if (arr[i] > min){
+//                min = arr[i]
+//                ind = i
+//            }
+//        }
+//        return ind
+//    }
 
 
     private fun saveToFirebase(uri: String, location: String) {
