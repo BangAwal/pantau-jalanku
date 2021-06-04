@@ -35,6 +35,7 @@ import com.google.firebase.storage.StorageReference
 import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
 import com.maulida.pantaujalanku.core.data.ReportEntity
 import com.maulida.pantaujalanku.databinding.FragmentReportBinding
+import com.maulida.pantaujalanku.ml.Model
 //import com.maulida.pantaujalanku.ml.Model
 import org.checkerframework.checker.nullness.qual.NonNull
 import org.tensorflow.lite.DataType
@@ -57,7 +58,7 @@ class ReportFragment : Fragment() {
     private lateinit var storage: FirebaseStorage
     private lateinit var document: DocumentReference
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-//    private lateinit var model : Model
+    private lateinit var model : Model
 
     //atribut
     private var statusAdd = false
@@ -82,7 +83,7 @@ class ReportFragment : Fragment() {
 
         if (activity != null) {
 
-//            model = Model.newInstance(view.context)
+            model = Model.newInstance(view.context)
 
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.context)
 
@@ -110,135 +111,61 @@ class ReportFragment : Fragment() {
             binding.imgUpload.setOnClickListener {
                 statusAdd = true
                 ImagePicker.with(this)
-                    .cameraOnly()
+                    .galleryOnly()
                     .start()
             }
 
-
             binding.btnUpload.setOnClickListener {
+                val resized = Bitmap.createScaledBitmap(bitmap, 448, 448, true)
+                val tBuffer = TensorImage.fromBitmap(resized)
+                var byteBuffer = tBuffer.buffer
+
+                val image = TensorBuffer.createFixedSize(intArrayOf(1, 448, 448, 3), DataType.UINT8)
+                image.loadBuffer(byteBuffer)
+
+                val output = model.process(image)
+
                 val location = binding.tvLocation.text.toString()
                 if (location.isEmpty()) {
                     binding.tvLocation.error = "Field is empty"
                     binding.tvLocation.requestFocus()
+                } else if(output.scoreAsTensorBuffer.floatArray[0] < 0.75){
+                    Toast.makeText(requireContext(), "Only pothole image", Toast.LENGTH_SHORT).show()
                 } else if (filePathUri != null) {
                     val progressDialog = ProgressDialog(view.context)
                     progressDialog.setTitle("Uploading...")
                     progressDialog.show()
-
-                    val resized = Bitmap.createScaledBitmap(bitmap, 448, 448, true)
-                    val tBuffer = TensorImage.fromBitmap(resized)
-                    var byteBuffer = tBuffer.buffer
-
-//                    val image = TensorBuffer.createFixedSize(intArrayOf(1, 448, 448, 3), DataType.UINT8)
-//                    image.loadBuffer(byteBuffer)
-//
-//                    val options = ObjectDetector.ObjectDetectorOptions.builder()
-//                        .setMaxResults(5)
-//                        .setScoreThreshold(0.5f)
-//                        .build()
-//                    val detector = ObjectDetector.createFromFileAndOptions(
-//                        view.context, // the application context
-//                        "model.tflite", // must be same as the filename in assets folder
-//                        options
-//                    )
-//
-//                    val result = detector.detect(tBuffer)
-
-                    for ((i, obj) in result.withIndex()) {
-                        val box = obj.boundingBox
-
-                        Log.d(TAG, "Detected object: ${i} ")
-                        Log.d(TAG, "boundingBox: (${box.left}, ${box.top}) - (${box.right},${box.bottom})")
-
-                        for ((j, category) in obj.categories.withIndex()) {
-                            Log.d(TAG, "    Label $j: ${category.label}")
-                            val confidence: Int = category.score.times(100).toInt()
-                            Log.d(TAG, "    Confidence: ${confidence}%")
-                        }
-                    }
+                    if (output.scoreAsTensorBuffer.floatArray[0] > 0.75) {
+                        val ref = fireStorage.child("potholes/" + UUID.randomUUID().toString())
+                        ref.putFile(filePathUri)
+                                .addOnSuccessListener {
+                                    progressDialog.dismiss()
+                                    Toast.makeText(view.context, "Uploaded", Toast.LENGTH_SHORT).show()
 
 
-//                    val outputs = model.process(image)
-//                    val score = outputs.scoreAsTensorBuffer
-//                    val category = outputs.categoryAsTensorBuffer
-//                    val loca = outputs.locationAsTensorBuffer
-//                    val number = outputs.numberOfDetectionsAsTensorBuffer
-//                    Log.d("resultPothole", "number : ${number.floatArray[0]}, location : ${loca.floatArray[0]}, score : ${score.floatArray[0]}, ${category.floatArray[0]}")
-                    val ref = fireStorage.child("potholes/" + UUID.randomUUID().toString())
-                    ref.putFile(filePathUri)
-                        .addOnSuccessListener {
-                            progressDialog.dismiss()
-                            Toast.makeText(view.context, "Uploaded", Toast.LENGTH_SHORT).show()
+                                    ref.downloadUrl.addOnSuccessListener {
+                                        saveToFirebase(it.toString(), location)
+                                    }
+                                }
 
-                            ref.downloadUrl.addOnSuccessListener {
-                                saveToFirebase(it.toString(), location)
-
-                            }
-                        }
-                        .addOnFailureListener {
-                            progressDialog.dismiss()
-                            Toast.makeText(
-                                view.context,
-                                "Failed uploaded image",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        .addOnProgressListener {
-                            val progress = 100.0 * it.bytesTransferred / it.totalByteCount
-                            progressDialog.setMessage("Upload ${progress.toInt()}%")
+                                .addOnFailureListener {
+                                    progressDialog.dismiss()
+                                    Toast.makeText(
+                                            view.context,
+                                            "Failed uploaded image",
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                .addOnProgressListener {
+                                    val progress = 100.0 * it.bytesTransferred / it.totalByteCount
+                                    progressDialog.setMessage("Upload ${progress.toInt()}%")
+                                }
                         }
                 }
             }
         }
 
     }
-
-    private fun runObjectDetection(bitmap: Bitmap){
-//        val image = TensorBuffer.createFixedSize(intArrayOf(1, 448, 448, 3), DataType.UINT8)
-        val image = TensorImage.fromBitmap(bitmap)
-//        image.loadBuffer()
-
-        val options = ObjectDetector.ObjectDetectorOptions.builder()
-            .setMaxResults(5)
-            .setScoreThreshold(0.5f)
-            .build()
-        val detector = ObjectDetector.createFromFileAndOptions(
-            view?.context, // the application context
-            "model.tflite", // must be same as the filename in assets folder
-            options
-        )
-
-        val result = detector.detect(image)
-    }
-
-    private fun debugPrint(results : List<Detection>) {
-        for ((i, obj) in results.withIndex()) {
-            val box = obj.boundingBox
-
-            Log.d(TAG, "Detected object: ${i} ")
-            Log.d(TAG, "  boundingBox: (${box.left}, ${box.top}) - (${box.right},${box.bottom})")
-
-            for ((j, category) in obj.categories.withIndex()) {
-                Log.d(TAG, "    Label $j: ${category.label}")
-                val confidence: Int = category.score.times(100).toInt()
-                Log.d(TAG, "    Confidence: ${confidence}%")
-            }
-        }
-    }
-//
-//    private fun getMax(arr : FloatArray) : Int{
-//        var ind = 0
-//        var min = 0.0f
-//
-//        for (i in 0..100){
-//            if (arr[i] > min){
-//                min = arr[i]
-//                ind = i
-//            }
-//        }
-//        return ind
-//    }
-
 
     private fun saveToFirebase(uri: String, location: String) {
 
@@ -276,23 +203,21 @@ class ReportFragment : Fragment() {
     @Suppress("DEPRECATION", "CAST_NEVER_SUCCEEDS")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        filePathUri = data?.data!!
 
         if (resultCode == Activity.RESULT_OK) {
             statusAdd = true
-            filePathUri = data?.data!!
-
-
-            bitmap = MediaStore.Images.Media.getBitmap(view?.context?.contentResolver, filePathUri)
-
             Glide.with(view?.context!!)
                 .load(filePathUri)
                 .apply(RequestOptions().transform(RoundedCorners(100)))
                 .into(binding.imgUpload)
+
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(view?.context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(view?.context, "Task Cancelled....", Toast.LENGTH_SHORT).show()
         }
+        bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePathUri)
     }
 
     private fun currentLocation() {

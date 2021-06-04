@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maulida.pantaujalanku.R
+import com.maulida.pantaujalanku.core.data.UserEntity
 import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.ActivityLoginBinding
@@ -22,6 +24,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     companion object{
         const val FIELD_EMPTY = "This field is empty"
         const val TAG = "LoginActivity"
+        private const val ID_SIGN_IN = 100
     }
 
     private lateinit var binding: ActivityLoginBinding
@@ -29,6 +32,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var sesiPreferences : SetPreferences
     private lateinit var userRepository: UserRepository
 
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var googleOptions: GoogleSignInOptions
     private lateinit var googleSignInClient : GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +46,14 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         sesiPreferences = SetPreferences(this)
         userRepository = UserRepository.getInstance(sesiPreferences)
 
+        googleOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+        googleSignInClient = GoogleSignIn.getClient(this, googleOptions)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+
         if (userRepository.isUserLogin()){
             finishAffinity()
             startActivity(Intent(this, HomeActivity::class.java))
@@ -48,12 +61,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.btnBack.setOnClickListener(this)
         binding.btnLogin.setOnClickListener(this)
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        binding.btnGoogle.setOnClickListener(this)
 
     }
 
@@ -64,6 +72,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.btn_login -> {
                 loginUser()
+            }
+            R.id.btn_google -> {
+                checkUser()
             }
         }
     }
@@ -110,6 +121,29 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     Log.w(TAG, "Error getting documents.", task.getException());
                 }
             }
+    }
+
+    private fun checkUser(){
+        val googleSignIn = firebaseAuth.currentUser
+
+        if (googleSignIn != null){
+            val user = UserEntity()
+            user.photo = googleSignIn.photoUrl.toString()
+            user.email = googleSignIn.email
+            user.username = googleSignIn.displayName
+            user.password = ""
+            firestore.collection("users")
+                    .add(user)
+                    .addOnSuccessListener {
+                        userRepository.loginUser("USERNAME_USER", googleSignIn.displayName.toString())
+                        userRepository.loginUser("EMAIL_USER", googleSignIn.email.toString())
+                        userRepository.loginUser("ID_USER", it.id)
+
+                        val intent = Intent(this, HomeActivity::class.java)
+                        startActivity(intent)
+                        finishAffinity()
+                    }
+        }
     }
 
 }

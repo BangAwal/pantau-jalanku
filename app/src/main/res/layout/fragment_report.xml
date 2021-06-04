@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
+    android:overScrollMode="never"
     android:id="@+id/fragment_report"
     android:background="@color/purple"
     tools:context=".ui.bottomBar.report.ReportFragment">
@@ -94,6 +95,7 @@
                 android:text="@string/upload"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

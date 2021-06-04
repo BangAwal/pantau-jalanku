@@ -6,6 +6,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.core.data.UserEntity
@@ -26,6 +30,10 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var fireStore : FirebaseFirestore
     private lateinit var userRepository: UserRepository
 
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var googleOptions: GoogleSignInOptions
+    private lateinit var googleSignInClient : GoogleSignInClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
@@ -35,6 +43,14 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
         userRepository = UserRepository.getInstance(SetPreferences(this))
 
+        googleOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+        googleSignInClient = GoogleSignIn.getClient(this, googleOptions)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+
 
         if (userRepository.isUserLogin()){
             finishAffinity()
@@ -43,6 +59,7 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.btnBack.setOnClickListener(this)
         binding.btnSaveChanges.setOnClickListener(this)
+        binding.btnGoogle.setOnClickListener(this)
 
     }
 
@@ -54,6 +71,32 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btn_save_changes -> {
                 signUp()
             }
+            R.id.btn_google -> {
+                checkUser()
+            }
+        }
+    }
+
+    private fun checkUser() {
+        val googleSignIn = firebaseAuth.currentUser
+
+        if (googleSignIn != null){
+            val user = UserEntity()
+            user.photo = googleSignIn.photoUrl.toString()
+            user.email = googleSignIn.email
+            user.username = googleSignIn.displayName
+            user.password = ""
+            fireStore.collection("users")
+                    .add(user)
+                    .addOnSuccessListener {
+                        userRepository.loginUser("USERNAME_USER", googleSignIn.displayName.toString())
+                        userRepository.loginUser("EMAIL_USER", googleSignIn.email.toString())
+                        userRepository.loginUser("ID_USER", it.id)
+
+                        val intent = Intent(this, HomeActivity::class.java)
+                        startActivity(intent)
+                        finishAffinity()
+                    }
         }
     }
 
