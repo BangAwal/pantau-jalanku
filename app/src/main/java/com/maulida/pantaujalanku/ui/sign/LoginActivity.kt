@@ -7,9 +7,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthCredential
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.core.data.UserEntity
@@ -17,6 +21,7 @@ import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.ActivityLoginBinding
 import com.maulida.pantaujalanku.ui.HomeActivity
+import java.lang.Exception
 
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
@@ -55,6 +60,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         firebaseAuth = FirebaseAuth.getInstance()
 
         if (userRepository.isUserLogin()){
+            checkUser()
             finishAffinity()
             startActivity(Intent(this, HomeActivity::class.java))
         }
@@ -74,7 +80,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 loginUser()
             }
             R.id.btn_google -> {
-                checkUser()
+                Log.d(TAG, "onCreate : begin google sign in")
+                val intent = googleSignInClient.signInIntent
+                startActivityForResult(intent, ID_SIGN_IN)
             }
         }
     }
@@ -103,19 +111,20 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         if(document.data.isEmpty()){
                             Toast.makeText(this, "Your user cannot be found", Toast.LENGTH_SHORT).show()
                         } else {
-                            if (document.data.getValue("email") == email && document.data.getValue("password") == password) {
+                            if (document.data.getValue("password").equals(password)
+                                && document.data.getValue("email").equals(email)) {
                                 userRepository.loginUser("USERNAME_USER", document.data.getValue("username").toString())
                                 userRepository.loginUser("ID_USER", document.id)
                                 userRepository.loginUser("EMAIL_USER", email)
 
+                                finishAffinity()
                                 val intent = Intent(this, HomeActivity::class.java)
                                 startActivity(intent)
-                                finishAffinity()
-                            } else{
-                                Toast.makeText(this,"Your email or password is wrong", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(this, "Email or Password is wrong", Toast.LENGTH_SHORT).show()
                             }
+
                         }
-                        Log.d(TAG, document.id + " => " + document.data)
                     }
                 } else {
                     Log.w(TAG, "Error getting documents.", task.getException());
@@ -127,23 +136,78 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         val googleSignIn = firebaseAuth.currentUser
 
         if (googleSignIn != null){
-            val user = UserEntity()
-            user.photo = googleSignIn.photoUrl.toString()
-            user.email = googleSignIn.email
-            user.username = googleSignIn.displayName
-            user.password = ""
-            firestore.collection("users")
-                    .add(user)
-                    .addOnSuccessListener {
-                        userRepository.loginUser("USERNAME_USER", googleSignIn.displayName.toString())
-                        userRepository.loginUser("EMAIL_USER", googleSignIn.email.toString())
-                        userRepository.loginUser("ID_USER", it.id)
-
-                        val intent = Intent(this, HomeActivity::class.java)
-                        startActivity(intent)
-                        finishAffinity()
-                    }
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == ID_SIGN_IN){
+            Log.d(TAG, "onActivityResult : googleSignInFromIntent")
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                firebaseAuthGoogle(account)
+            } catch(e : Exception){
+                Log.d(TAG, "onActivityResult : ${e.message}")
+            }
+
+        }
+    }
+
+    private fun firebaseAuthGoogle(account : GoogleSignInAccount?){
+        Log.d(TAG, "firebaseAuthGoogle : Begin firebase auth with google")
+
+        val credential = GoogleAuthProvider.getCredential(account?.idToken!!, null)
+        firebaseAuth.signInWithCredential(credential)
+                .addOnSuccessListener {  authResult ->
+                    Log.d(TAG, "firebaseAuthGoogle : Login")
+
+                    val firebaseUser = firebaseAuth.currentUser
+                    val uid = firebaseUser?.uid
+                    val email = firebaseUser?.email
+
+                    Log.d(TAG, "FirebaseAuthGoogle : Uid : $uid")
+                    Log.d(TAG, "FirebaseAuthGoogle : Email : $email")
+
+                    firestore.collection("users").whereEqualTo("email", firebaseUser?.email)
+                            .get()
+                            .addOnSuccessListener {
+                                if (it.size() > 0){
+                                    Toast.makeText(this, "Your account already added", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    val user = UserEntity()
+                                    user.photo = firebaseUser?.photoUrl.toString()
+                                    user.email = firebaseUser?.email
+                                    user.username = firebaseUser?.displayName
+                                    user.password = ""
+
+                                    firestore.collection("users")
+                                            .add(user)
+                                            .addOnSuccessListener {
+                                                if (authResult.additionalUserInfo!!.isNewUser){
+                                                    Log.d(TAG, "FirebaseAuthGoogle : Account create \n$email")
+                                                    Toast.makeText(this, "Account Create $email", Toast.LENGTH_SHORT).show()
+                                                }
+                                                userRepository.loginUser("USERNAME_USER", firebaseUser?.displayName.toString())
+                                                userRepository.loginUser("EMAIL_USER", firebaseUser?.email.toString())
+                                                userRepository.loginUser("ID_USER", it.id)
+
+                                                startActivity(Intent(this, HomeActivity::class.java))
+                                                finish()
+
+                                            }
+                                }
+                            }
+                }
+                .addOnFailureListener {
+                    Log.d(TAG, "firebaseAuthGoogle : Login Failed due to ${it.message}")
+                    Toast.makeText(this, "Login failed due to ${it.message}", Toast.LENGTH_SHORT).show()
+
+                }
     }
 
 }

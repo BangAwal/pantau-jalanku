@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -31,6 +32,7 @@ class ProfileFragment : Fragment() {
     private lateinit var storage: FirebaseStorage
     private lateinit var fireStorageReference: StorageReference
     private lateinit var userRepository: UserRepository
+    private lateinit var firebaseAuth: FirebaseAuth
 
     //atribut
     private var userId : String? = null
@@ -52,11 +54,14 @@ class ProfileFragment : Fragment() {
         storage = FirebaseStorage.getInstance()
         fireStorageReference = storage.reference
 
+        firebaseAuth = FirebaseAuth.getInstance()
+
         userRepository = UserRepository.getInstance(SetPreferences(view.context))
 
         userId = arguments?.getString("ID_USER")
 
         binding.btnLogout.setOnClickListener {
+            firebaseAuth.signOut()
             userRepository.logoutUser()
             startActivity(Intent(view.context, MainActivity::class.java))
             activity?.finishAffinity()
@@ -80,49 +85,6 @@ class ProfileFragment : Fragment() {
             changeDataFirebase(username, email, password)
         }
 
-        binding.btnSaveChange.setOnClickListener {
-            if (fileUri != null) {
-                val progressDialog = ProgressDialog(view?.context).apply {
-                    setTitle("Uploading...")
-                    show()
-                }
-                val ref = fireStorageReference.child("profile/${UUID.randomUUID()}")
-                ref.putFile(this.fileUri)
-                    .addOnSuccessListener {
-                        progressDialog.dismiss()
-                        Toast.makeText(view?.context, "Change Profile Success", Toast.LENGTH_SHORT)
-                            .show()
-
-                        ref.downloadUrl.addOnSuccessListener {
-                            saveToFirebase(it.toString())
-                        }
-                    }
-                    .addOnFailureListener {
-                        progressDialog.dismiss()
-                        Toast.makeText(view?.context, "Cancelled...", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnProgressListener {
-                        val progress = 100.0 * it.bytesTransferred / it.totalByteCount
-                        progressDialog.setMessage("Upload ${progress.toInt()}")
-                    }
-            }
-        }
-
-    }
-
-    private fun saveToFirebase(uri : String) {
-        firestore.collection("users").document(userId.toString())
-            .update(mapOf(
-                "photo" to uri
-            ))
-            .addOnSuccessListener {
-                Toast.makeText(view?.context, "Change profile success", Toast.LENGTH_SHORT).show()
-                Log.d("ProfileFragment", "success data change")
-            }
-            .addOnFailureListener {
-                Toast.makeText(view?.context, "Failure change profile...", Toast.LENGTH_SHORT).show()
-                Log.e("ProfileFragment", "Failed change data")
-            }
     }
 
     private fun changeDataFirebase(

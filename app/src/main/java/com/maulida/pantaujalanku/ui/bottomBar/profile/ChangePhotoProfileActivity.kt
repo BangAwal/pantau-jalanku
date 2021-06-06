@@ -13,6 +13,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.databinding.ActivityChangePhotoProfileBinding
 import com.maulida.pantaujalanku.ui.HomeActivity
 import java.util.*
@@ -51,6 +52,8 @@ class ChangePhotoProfileActivity : AppCompatActivity() {
                 .start()
         }
 
+        showImage()
+
         binding.btnSaveChanges.setOnClickListener {
             if (fileUri != null) {
                 val progressDialog = ProgressDialog(this)
@@ -75,7 +78,7 @@ class ChangePhotoProfileActivity : AppCompatActivity() {
                     }
                     .addOnProgressListener {
                         val progress = 100.0 * it.bytesTransferred/ it.totalByteCount
-                        progressDialog.setMessage("Upload ${progress.toInt()}")
+                        progressDialog.setMessage("Upload ${progress.toInt()}%")
                     }
             }
         }
@@ -92,6 +95,24 @@ class ChangePhotoProfileActivity : AppCompatActivity() {
             }
             .addOnFailureListener {
                 Log.e("ChangePhoto", it.message.toString())
+            }
+    }
+
+    private fun showImage(){
+        firestore.collection("users").document(userId.toString())
+            .get()
+            .addOnSuccessListener {
+                if (it.exists()){
+                    if (it.data?.getValue("photo") == null
+                        || it.data?.getValue("photo") == ""){
+                        binding.imgProfile.setImageResource(R.drawable.ic_baseline_account_circle_24)
+                    } else {
+                        Glide.with(this)
+                            .load(it.data?.getValue("photo"))
+                            .circleCrop()
+                            .into(binding.imgProfile)
+                    }
+                }
             }
     }
 
