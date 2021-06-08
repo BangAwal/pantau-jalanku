@@ -20,29 +20,17 @@
     <string name="map">Map</string>
     <string name="profile">Profile User</string>
     <string name="about_app">About App</string>
-    <string name="home">Home</string>
     <string name="hai_username">Hai, Username</string>
-    <string name="upload_image">Upload Image</string>
     <string name="enter_your_location">Enter Your Location</string>
     <string name="upload">Upload</string>
     <string name="change_password">Change Password</string>
     <string name="save_change">Save Change</string>
     <string name="sign_out">SIGN OUT</string>
-    <string name="enter_address_city_or_zip_code">Enter address, City or zip code</string>
 
-    <string name="info">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</string>
+    <string name="info">Pantau Jalanku is a mobile application that was created to improve the wellbeing of road users including: early warnings to road users regarding the presence of potholes on the road they are traveling based on reports from other road users. Did you know that potholes touch 15% of the total accidents on the road?. Because of this potholes, every day there are 3 cases of accidents. With this application we can help reduce the possibility of accidents on the road because of the existence of potholes with early warning to the road users.</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="address_example">Address example</string>
     <string name="upload_photo_profile">Upload Photo Profile</string>
-    <string name="skip">Skip</string>
     <string name="save">Save</string>
     <string name="upload_later">Upload later</string>
-    <string name="address">Address</string>
-    <string name="latitude">Latitude</string>
-    <string name="longitude">Longitude</string>
     <string name="change_photo_profile">Change Photo Profile</string>
 </resources>

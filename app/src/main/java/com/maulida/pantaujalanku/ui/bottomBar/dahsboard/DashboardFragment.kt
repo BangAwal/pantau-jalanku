@@ -29,6 +29,7 @@ import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.ActivityHomeBinding
 import com.maulida.pantaujalanku.databinding.FragmentDashboardBinding
+import com.maulida.pantaujalanku.ui.bottomBar.about.AboutActivity
 
 class DashboardFragment : Fragment(){
 
@@ -86,6 +87,12 @@ class DashboardFragment : Fragment(){
                 }
 
         currentLocation()
+
+        binding.about.setOnClickListener {
+            startActivity(Intent(context, AboutActivity::class.java))
+        }
+
+        Toast.makeText(view.context, "Check your profile to update your password", Toast.LENGTH_SHORT).show()
     }
 
     private fun currentLocation() {
@@ -109,6 +116,7 @@ class DashboardFragment : Fragment(){
                                 "ReportFragment",
                                 "Place '${placeLikelihood.place.name}' has likelihood: ${placeLikelihood.likelihood}"
                         )
+                        Toast.makeText(view?.context, "Get my current location", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     val exception = task.exception

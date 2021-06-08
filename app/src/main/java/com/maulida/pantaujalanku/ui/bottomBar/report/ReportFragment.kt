@@ -106,44 +106,30 @@ class ReportFragment : Fragment() {
             binding.imgUpload.setOnClickListener {
                 statusAdd = true
                 ImagePicker.with(this)
-                    .galleryOnly()
+                    .cameraOnly()
                     .start()
             }
 
-            binding.btnPredict.setOnClickListener {
-                bitmap = Bitmap.createScaledBitmap(bitmap, 250, 250, true)
+            binding.btnUpload.setOnClickListener {
+                val resized = Bitmap.createScaledBitmap(bitmap, 250, 250, true)
                 val image = TensorBuffer.createFixedSize(intArrayOf(1, 250, 250, 3), DataType.FLOAT32)
 
-                val tensorImage = TensorImage(DataType.FLOAT32)
-                tensorImage.load(bitmap)
-                var tBuffer = tensorImage.buffer
+//                var tBuffer = TensorImage.fromBitmap(resized)
 //                var byteBuffer = tBuffer.buffer
+                val tensorImage = TensorImage(DataType.FLOAT32)
+                tensorImage.load(resized)
+                var tBuffer = tensorImage.buffer
 
                 image.loadBuffer(tBuffer)
 
                 val output = model.process(image)
-                val score = output.outputFeature0AsTensorBuffer.floatArray
-
-                Log.d(TAG, "result : index 0 : ${score[0]}")
-            }
-
-            binding.btnUpload.setOnClickListener {
-                val resized = Bitmap.createScaledBitmap(bitmap, 448, 448, true)
-                val image = TensorBuffer.createFixedSize(intArrayOf(1, 448, 448, 3), DataType.UINT8)
-
-                var tBuffer = TensorImage.fromBitmap(resized)
-                var byteBuffer = tBuffer.buffer
-
-                image.loadBuffer(byteBuffer)
-
-                val output = model.process(image)
-//                val score = output.scoreAsTensorBuffer.floatArray[0]
+                val outputFeature = output.outputFeature0AsTensorBuffer.floatArray[0]
 
                 val location = binding.tvLocation.text.toString()
                 if (location.isEmpty()) {
                     binding.tvLocation.error = "Field is empty"
                     binding.tvLocation.requestFocus()
-                } else if(10.0 <= 0.75){
+                } else if(outputFeature != 1.0f){
                     Toast.makeText(requireContext(), "Only pothole image", Toast.LENGTH_SHORT).show()
                 } else if (filePathUri != null) {
                     val progressDialog = ProgressDialog(view.context)
@@ -155,8 +141,10 @@ class ReportFragment : Fragment() {
                                     progressDialog.dismiss()
                                     Toast.makeText(view.context, "Uploaded", Toast.LENGTH_SHORT).show()
 
-                                    ref.downloadUrl.addOnSuccessListener {
-                                        saveToFirebase(it.toString(), location)
+                                    if (outputFeature == 1.0f){
+                                        ref.downloadUrl.addOnSuccessListener {
+                                            saveToFirebase(it.toString(), location)
+                                        }
                                     }
                                 }
 
@@ -220,7 +208,8 @@ class ReportFragment : Fragment() {
             filePathUri = data?.data!!
             Glide.with(view?.context!!)
                 .load(filePathUri)
-                .apply(RequestOptions().transform(RoundedCorners(100)))
+                .centerCrop()
+                .apply(RequestOptions().transform(RoundedCorners(150)))
                 .into(binding.imgUpload)
             bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePathUri)
         } else if (resultCode == ImagePicker.RESULT_ERROR) {

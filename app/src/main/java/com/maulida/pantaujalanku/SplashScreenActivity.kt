@@ -19,7 +19,7 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         tvAnim = AnimationUtils.loadAnimation(this, R.anim.pj_anim)
-        binding.tvPj.animation = tvAnim
+        binding.tvPJ.animation = tvAnim
 
         Handler(mainLooper).postDelayed({
 

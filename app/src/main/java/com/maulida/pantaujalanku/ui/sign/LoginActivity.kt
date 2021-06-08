@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     companion object{
         const val FIELD_EMPTY = "This field is empty"
         const val TAG = "LoginActivity"
-        private const val ID_SIGN_IN = 100
+        private const val ID_SIGN_IN = 120
     }
 
     private lateinit var binding: ActivityLoginBinding
@@ -163,17 +163,17 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         val credential = GoogleAuthProvider.getCredential(account?.idToken!!, null)
         firebaseAuth.signInWithCredential(credential)
-                .addOnSuccessListener {  authResult ->
-                    Log.d(TAG, "firebaseAuthGoogle : Login")
+                .addOnCompleteListener {  authResult ->
+                    if (authResult.isSuccessful){
 
-                    val firebaseUser = firebaseAuth.currentUser
-                    val uid = firebaseUser?.uid
-                    val email = firebaseUser?.email
+                        Log.d(TAG, "firebaseAuthGoogle : Login")
+                        val firebaseUser = firebaseAuth.currentUser
 
-                    Log.d(TAG, "FirebaseAuthGoogle : Uid : $uid")
-                    Log.d(TAG, "FirebaseAuthGoogle : Email : $email")
-
-                    firestore.collection("users").whereEqualTo("email", firebaseUser?.email)
+                        val uid = firebaseUser?.uid
+                        val email = firebaseUser?.email
+                        Log.d(TAG, "FirebaseAuthGoogle : Uid : $uid")
+                        Log.d(TAG, "FirebaseAuthGoogle : Email : $email")
+                        firestore.collection("users").whereEqualTo("email", firebaseUser?.email)
                             .get()
                             .addOnSuccessListener {
                                 if (it.size() > 0){
@@ -186,22 +186,24 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                                     user.password = ""
 
                                     firestore.collection("users")
-                                            .add(user)
-                                            .addOnSuccessListener {
-                                                if (authResult.additionalUserInfo!!.isNewUser){
-                                                    Log.d(TAG, "FirebaseAuthGoogle : Account create \n$email")
-                                                    Toast.makeText(this, "Account Create $email", Toast.LENGTH_SHORT).show()
-                                                }
-                                                userRepository.loginUser("USERNAME_USER", firebaseUser?.displayName.toString())
-                                                userRepository.loginUser("EMAIL_USER", firebaseUser?.email.toString())
-                                                userRepository.loginUser("ID_USER", it.id)
-
-                                                startActivity(Intent(this, HomeActivity::class.java))
-                                                finish()
-
+                                        .add(user)
+                                        .addOnSuccessListener {
+                                            if (authResult.result.additionalUserInfo?.isNewUser!!){
+                                                Log.d(TAG, "FirebaseAuthGoogle : Account create \n$email")
+                                                Toast.makeText(this, "Account Create $email", Toast.LENGTH_SHORT).show()
                                             }
+                                            userRepository.loginUser("USERNAME_USER", firebaseUser?.displayName.toString())
+                                            userRepository.loginUser("EMAIL_USER", firebaseUser?.email.toString())
+                                            userRepository.loginUser("ID_USER", it.id)
+
+                                            startActivity(Intent(this, HomeActivity::class.java))
+                                            finish()
+
+                                        }
                                 }
                             }
+
+                    }
                 }
                 .addOnFailureListener {
                     Log.d(TAG, "firebaseAuthGoogle : Login Failed due to ${it.message}")

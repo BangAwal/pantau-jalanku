@@ -22,7 +22,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -36,8 +35,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_login"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="151dp"
+            android:layout_height="133dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_baseline_account_circle_24"
             app:civ_border_color="@color/black"
@@ -90,7 +89,7 @@
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/tv_changePass"
+                android:id="@+id/tv_change_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"

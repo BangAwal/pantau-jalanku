@@ -25,9 +25,4 @@
         <item name="cornerSizeBottomRight">40dp</item>
     </style>
 
-    <style name="roundinfo" parent="">
-        <item name="cornerFamilyTopLeft">rounded</item>
-        <item name="cornerSizeTopLeft">100dp</item>
-    </style>
-
 </resources>

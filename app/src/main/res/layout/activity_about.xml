@@ -9,80 +9,75 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/layout_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_arrow_back_24"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:id="@+id/tv_about"
+        <LinearLayout
+            android:id="@+id/layout_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/poppins_semibold"
-            android:gravity="center"
-            android:text="@string/about_app"
-            android:textColor="@color/white"
-            android:paddingEnd="24dp"
-            android:textSize="25sp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:padding="16dp"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_arrow_back_24"
+                tools:ignore="ContentDescription" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="640dp"
-        android:background="@drawable/info_orange"
-        app:layout_constraintBottom_toBottomOf="parent">
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:paddingEnd="24dp"
+                android:text="@string/about_app"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="625dp"
-        android:orientation="vertical"
-        android:background="@drawable/info_white"
-        app:layout_constraintBottom_toBottomOf="parent">
+        </LinearLayout>
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/img_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:src="@drawable/pj_mainn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/roundinfo"
+            app:layout_constraintTop_toBottomOf="@+id/layout_title"
             tools:ignore="ContentDescription" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:scrollbars="none"
-            android:padding="16dp"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/img_main">
 
-            <TextView
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/info"
-                android:fontFamily="@font/poppins"
-                android:textColor="@color/black"
-                android:textSize="16sp"/>
-        </ScrollView>
+                android:overScrollMode="never"
+                android:padding="16dp"
+                android:scrollbars="none"
+                app:layout_constraintTop_toBottomOf="@+id/img_main">
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="@string/info"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </ScrollView>
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

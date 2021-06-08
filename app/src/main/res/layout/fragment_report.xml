@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:overScrollMode="never"
-    android:id="@+id/fragment_report"
+    android:scrollbars="none"
     android:background="@color/purple"
     tools:context=".ui.bottomBar.report.ReportFragment">
 
@@ -24,7 +24,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_report"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -53,8 +52,7 @@
             android:id="@+id/img_upload"
             android:layout_width="350dp"
             android:layout_height="300dp"
-            android:scaleType="fitXY"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="32dp"
             android:src="@drawable/upload_image"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
@@ -96,10 +94,6 @@
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/btn_predict"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
 
 
