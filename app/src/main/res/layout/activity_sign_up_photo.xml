@@ -10,33 +10,33 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/poppins"
-        android:text="@string/upload_photo_profile"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/poppins"
+            android:text="@string/upload_photo_profile"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/poppins"
-        android:text="@string/email_address"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_account" />
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/poppins"
+            android:text="@string/email_address"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_account" />
 
         <ImageView
             android:id="@+id/iv_profile"
@@ -48,20 +48,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_email"
-            app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+            app:srcCompat="@drawable/ic_baseline_account_circle_24"
+            tools:ignore="ContentDescription" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_skip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_round_skip"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="@string/upload_later"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_skip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_round_skip"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="@string/upload_later"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_save_img"
@@ -78,15 +79,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_add_profile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
-        app:layout_constraintEnd_toEndOf="@+id/iv_profile"
-        app:srcCompat="@drawable/ic_baseline_add_circle_24" />
+        <ImageView
+            android:id="@+id/iv_add_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
+            app:layout_constraintEnd_toEndOf="@+id/iv_profile"
+            app:srcCompat="@drawable/ic_baseline_add_circle_24"
+            tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

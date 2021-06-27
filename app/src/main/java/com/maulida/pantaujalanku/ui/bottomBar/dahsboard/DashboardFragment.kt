@@ -1,33 +1,27 @@
 package com.maulida.pantaujalanku.ui.bottomBar.dahsboard
 
+//import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.firebase.firestore.FirebaseFirestore
-import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
 import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.core.preference.UserRepository
-import com.maulida.pantaujalanku.databinding.ActivityHomeBinding
 import com.maulida.pantaujalanku.databinding.FragmentDashboardBinding
 import com.maulida.pantaujalanku.ui.bottomBar.about.AboutActivity
 
@@ -45,7 +39,7 @@ class DashboardFragment : Fragment(){
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
@@ -58,7 +52,7 @@ class DashboardFragment : Fragment(){
         userRepository = UserRepository.getInstance(sesi)
         firestore = FirebaseFirestore.getInstance()
 
-        Places.initialize(view.context, "$MAPS_API_KEY")
+        Places.initialize(view.context, "AIzaSyBJP-Tr60idUtUYhF0P8gFQ1Ya6Jd7KFw4")
         Places.isInitialized()
 
         placesClient = Places.createClient(view.context)

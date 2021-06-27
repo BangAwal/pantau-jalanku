@@ -1,5 +1,7 @@
 package com.maulida.pantaujalanku.ui.bottomBar.report
 
+//import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
+//import com.maulida.pantaujalanku.ml.Model
 import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
@@ -10,13 +12,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -32,22 +34,19 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
 import com.maulida.pantaujalanku.core.data.ReportEntity
 import com.maulida.pantaujalanku.databinding.FragmentReportBinding
 import com.maulida.pantaujalanku.ml.Model
-//import com.maulida.pantaujalanku.ml.Model
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.nio.Buffer
 import java.util.*
 
 class ReportFragment : Fragment() {
 
-    companion object{
-        const val TAG = "potholeResult"
-    }
+//    companion object{
+//        const val TAG = "potholeResult"
+//    }
 
     private lateinit var binding: FragmentReportBinding
     private lateinit var firestore: FirebaseFirestore
@@ -69,7 +68,7 @@ class ReportFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentReportBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -84,7 +83,7 @@ class ReportFragment : Fragment() {
 
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.context)
 
-            Places.initialize(view.context, "${MAPS_API_KEY}")
+            Places.initialize(view.context, "AIzaSyBJP-Tr60idUtUYhF0P8gFQ1Ya6Jd7KFw4")
             Places.isInitialized()
 
             placesClient = Places.createClient(requireContext())
@@ -118,7 +117,7 @@ class ReportFragment : Fragment() {
 //                var byteBuffer = tBuffer.buffer
                 val tensorImage = TensorImage(DataType.FLOAT32)
                 tensorImage.load(resized)
-                var tBuffer = tensorImage.buffer
+                val tBuffer = tensorImage.buffer
 
                 image.loadBuffer(tBuffer)
 

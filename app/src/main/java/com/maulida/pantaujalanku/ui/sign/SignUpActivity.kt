@@ -2,6 +2,8 @@ package com.maulida.pantaujalanku.ui.sign
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -14,12 +16,13 @@ import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.ActivitySignUpBinding
 import com.maulida.pantaujalanku.ui.HomeActivity
 
+
 class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
 
     companion object{
         const val FIELD_EMPTY = "This field is empty"
-        const val TAG = "SingUpActivity"
+        //const val TAG = "SingUpActivity"
     }
 
     private lateinit var binding: ActivitySignUpBinding
@@ -42,6 +45,17 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.btnBack.setOnClickListener(this)
         binding.btnSaveChanges.setOnClickListener(this)
+        binding.checkpass.setOnCheckedChangeListener { _, value ->
+            if (value) {
+                // Show Password
+                binding.tvPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                binding.tvPassverif.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            } else {
+                // Hide Password
+                binding.tvPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+                binding.tvPassverif.transformationMethod = PasswordTransformationMethod.getInstance()
+            }
+        }
 
     }
 
@@ -113,7 +127,10 @@ class SignUpActivity : AppCompatActivity(), View.OnClickListener {
                                     finish()
 
                                     Toast.makeText(this, "Success Added", Toast.LENGTH_SHORT).show()
-                                    Log.d("SignUpActivity", "document added with Id : ${documentReference.id}")
+                                    Log.d(
+                                        "SignUpActivity",
+                                        "document added with Id : ${documentReference.id}"
+                                    )
                                 }
                                 .addOnFailureListener {
                                     Log.w("SignUpActivity", "Something wrong")

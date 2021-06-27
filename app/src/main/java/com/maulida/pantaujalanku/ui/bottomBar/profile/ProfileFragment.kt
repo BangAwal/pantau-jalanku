@@ -1,18 +1,21 @@
 package com.maulida.pantaujalanku.ui.bottomBar.profile
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -22,8 +25,6 @@ import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.FragmentProfileBinding
-import de.hdodenhof.circleimageview.CircleImageView
-import java.util.*
 
 class ProfileFragment : Fragment() {
 
@@ -33,6 +34,8 @@ class ProfileFragment : Fragment() {
     private lateinit var fireStorageReference: StorageReference
     private lateinit var userRepository: UserRepository
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var googleOptions: GoogleSignInOptions ///tambah ini
+    private lateinit var googleSignInClient : GoogleSignInClient ///tambah ini
 
     //atribut
     private var userId : String? = null
@@ -42,7 +45,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,6 +57,12 @@ class ProfileFragment : Fragment() {
         storage = FirebaseStorage.getInstance()
         fireStorageReference = storage.reference
 
+        ///tambah ini
+        googleOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(view.context, googleOptions)
+        ///
+
         firebaseAuth = FirebaseAuth.getInstance()
 
         userRepository = UserRepository.getInstance(SetPreferences(view.context))
@@ -61,10 +70,33 @@ class ProfileFragment : Fragment() {
         userId = arguments?.getString("ID_USER")
 
         binding.btnLogout.setOnClickListener {
-            firebaseAuth.signOut()
-            userRepository.logoutUser()
-            startActivity(Intent(view.context, MainActivity::class.java))
-            activity?.finishAffinity()
+
+            /////tambahan fix
+            val alertDialogBuilder = context?.let { it1 -> AlertDialog.Builder(it1) }
+            alertDialogBuilder?.setTitle("SignOut Alert!")
+            alertDialogBuilder?.setMessage("Do you really want to SignOut ?")
+            alertDialogBuilder?.setCancelable(false)
+            alertDialogBuilder?.setPositiveButton("Yes") { _, _ ->
+                googleSignInClient.signOut().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        firebaseAuth.signOut()
+                        userRepository.logoutUser()
+                        startActivity(Intent(view.context, MainActivity::class.java))
+                        activity?.finishAffinity()
+                    }
+                }
+            }
+            alertDialogBuilder?.setNegativeButton("No") { _, _ ->
+                // Do nothing
+            }
+            val alertDialog = alertDialogBuilder?.create()
+            alertDialog?.show()
+            /////
+
+//            firebaseAuth.signOut()
+//            userRepository.logoutUser()
+//            startActivity(Intent(view.context, MainActivity::class.java))
+//            activity?.finishAffinity()
         }
 
         getData()

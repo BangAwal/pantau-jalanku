@@ -42,7 +42,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+        app:srcCompat="@drawable/ic_baseline_account_circle_24"
+        tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_save_changes"
@@ -66,6 +67,7 @@
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="@+id/img_profile"
         app:layout_constraintEnd_toEndOf="@+id/img_profile"
-        app:srcCompat="@drawable/ic_baseline_add_circle_24" />
+        app:srcCompat="@drawable/ic_baseline_add_circle_24"
+        tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

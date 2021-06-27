@@ -21,8 +21,8 @@
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
         android:background="@drawable/nav_menu"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -33,7 +33,8 @@
             android:layout_height="35dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_baseline_home_24"/>
+            android:src="@drawable/ic_baseline_home_24"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/nav_upload"
@@ -41,7 +42,8 @@
             android:layout_height="35dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_baseline_image_white_24"/>
+            android:src="@drawable/ic_baseline_image_white_24"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/nav_maps"
@@ -49,7 +51,8 @@
             android:layout_height="35dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_baseline_location_on_white_24"/>
+            android:src="@drawable/ic_baseline_location_on_white_24"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/nav_profile"
@@ -57,10 +60,9 @@
             android:layout_height="35dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_baseline_manage_accounts_white_24"/>
-
+            android:src="@drawable/ic_baseline_manage_accounts_white_24"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

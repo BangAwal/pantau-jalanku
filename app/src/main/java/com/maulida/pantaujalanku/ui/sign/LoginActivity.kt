@@ -2,6 +2,8 @@ package com.maulida.pantaujalanku.ui.sign
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -12,7 +14,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maulida.pantaujalanku.R
@@ -21,7 +22,6 @@ import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.ActivityLoginBinding
 import com.maulida.pantaujalanku.ui.HomeActivity
-import java.lang.Exception
 
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
@@ -68,6 +68,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnBack.setOnClickListener(this)
         binding.btnLogin.setOnClickListener(this)
         binding.btnGoogle.setOnClickListener(this)
+        binding.checkpass.setOnCheckedChangeListener { _, value ->
+            if (value) {
+                // Show Password
+                binding.tvPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            } else {
+                // Hide Password
+                binding.tvPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+            }
+        }
 
     }
 
@@ -127,7 +136,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     }
                 } else {
-                    Log.w(TAG, "Error getting documents.", task.getException());
+                    Log.w(TAG, "Error getting documents.", task.exception)
                 }
             }
     }
@@ -178,6 +187,23 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                             .addOnSuccessListener {
                                 if (it.size() > 0){
                                     Toast.makeText(this, "Your account already added", Toast.LENGTH_SHORT).show()
+
+                                    ///tambahan
+                                    for (document in it) {
+                                        //if(document.data.isNotEmpty()){
+                                            userRepository.loginUser("USERNAME_USER", document.data.getValue("username").toString())
+                                            userRepository.loginUser("ID_USER", document.id)
+                                        if (email != null) {
+                                            userRepository.loginUser("EMAIL_USER", email)
+                                        }
+
+                                            finishAffinity()
+                                            val intent = Intent(this, HomeActivity::class.java)
+                                            startActivity(intent)
+                                       // }
+                                    }
+                                    ///
+
                                 } else {
                                     val user = UserEntity()
                                     user.photo = firebaseUser?.photoUrl.toString()

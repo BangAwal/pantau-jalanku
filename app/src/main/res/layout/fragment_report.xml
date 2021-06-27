@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
-    android:overScrollMode="never"
-    android:scrollbars="none"
     android:background="@color/purple"
+    android:overScrollMode="never"
+    android:padding="16dp"
+    android:scrollbars="none"
     tools:context=".ui.bottomBar.report.ReportFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,42 +52,47 @@
             android:id="@+id/img_upload"
             android:layout_width="350dp"
             android:layout_height="300dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="25dp"
             android:src="@drawable/upload_image"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_hai" />
-
+            app:layout_constraintTop_toBottomOf="@+id/tv_hai"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="40dp"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/tv_location"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_round"
-                android:drawableStart="@drawable/ic_baseline_location_on_24"
-                android:fontFamily="@font/poppins"
-                android:hint="@string/enter_your_location"
-                android:inputType="textEmailAddress"
-                android:padding="15dp"
-                android:textSize="16sp" />
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/tv_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_round"
+                    android:drawableStart="@drawable/ic_baseline_location_red"
+                    android:fontFamily="@font/poppins"
+                    android:hint="@string/enter_your_location"
+                    android:inputType="textEmailAddress"
+                    android:padding="20dp"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_upload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="35dp"
                 android:background="@drawable/button_round"
                 android:fontFamily="@font/poppins_semibold"
                 android:text="@string/upload"
@@ -95,8 +100,6 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

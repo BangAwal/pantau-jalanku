@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/purple">
 
         <ImageView
@@ -23,65 +23,65 @@
             app:shapeAppearanceOverlay="@style/roundImg"
             tools:ignore="ContentDescription" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_main">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_semibold"
-            android:text="@string/pantau_jalanku"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins"
-            android:text="@string/description"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_sign_up"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_round"
-            android:fontFamily="@font/poppins_semibold"
-            android:layout_marginTop="60dp"
-            android:text="@string/sign_up"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_main">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins"
-            android:layout_marginTop="10dp"
-            android:text="@string/or"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/pantau_jalanku"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_round"
-            android:fontFamily="@font/poppins_semibold"
-            android:layout_marginTop="10dp"
-            android:text="@string/login"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="@string/description"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
-    </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_sign_up"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button_round"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/sign_up"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/or"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/button_round"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/login"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

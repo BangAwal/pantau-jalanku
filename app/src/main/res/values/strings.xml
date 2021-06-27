@@ -8,7 +8,6 @@
     <string name="welcome_back">Welcome Back!</string>
     <string name="email_address">Email Address</string>
     <string name="password">Password</string>
-    <string name="or_login_with_email">OR LOGIN WITH EMAIL</string>
     <string name="continue_with_google">CONTINUE WITH GOOGLE</string>
     <string name="create_your_account">Create Your Account!</string>
     <string name="verify_password">Verify Password</string>
@@ -27,10 +26,11 @@
     <string name="save_change">Save Change</string>
     <string name="sign_out">SIGN OUT</string>
 
-    <string name="info">Pantau Jalanku is a mobile application that was created to improve the wellbeing of road users including: early warnings to road users regarding the presence of potholes on the road they are traveling based on reports from other road users. Did you know that potholes touch 15% of the total accidents on the road?. Because of this potholes, every day there are 3 cases of accidents. With this application we can help reduce the possibility of accidents on the road because of the existence of potholes with early warning to the road users.</string>
+    <string name="info">"\t\t\t<big><b>Pantau Jalanku</b></big> is a mobile application that was created to improve the wellbeing of road users including: early warnings to road users regarding the presence of potholes on the road they are traveling based on reports from other road users.\n\t\t\t<b>Did you know that potholes touch 15% of the total accidents on the road?</b> Because of this potholes, every day there are 3 cases of accidents. With this application we can help reduce the possibility of accidents on the road because of the existence of potholes with early warning to the road users."</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="upload_photo_profile">Upload Photo Profile</string>
     <string name="save">Save</string>
     <string name="upload_later">Upload later</string>
     <string name="change_photo_profile">Change Photo Profile</string>
+    <string name="show_password">Show Password</string>
 </resources>

@@ -2,17 +2,12 @@ package com.maulida.pantaujalanku
 
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.ActivityMainBinding
-import com.maulida.pantaujalanku.ui.HomeActivity
-import com.maulida.pantaujalanku.ui.bottomBar.map.MapActivity
 import com.maulida.pantaujalanku.ui.sign.LoginActivity
 import com.maulida.pantaujalanku.ui.sign.SignUpActivity
 

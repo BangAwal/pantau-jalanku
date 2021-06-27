@@ -4,17 +4,16 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.maulida.pantaujalanku.core.data.UserEntity
 import com.maulida.pantaujalanku.core.preference.SetPreferences
 import com.maulida.pantaujalanku.core.preference.UserRepository
 import com.maulida.pantaujalanku.databinding.ActivitySignUpPhotoBinding
@@ -23,10 +22,10 @@ import java.util.*
 
 class SignUpPhotoActivity : AppCompatActivity(){
 
-    companion object{
-        const val EXTRA_ID = "id"
-        const val EXTRA_EMAIL = "email"
-    }
+//    companion object{
+//        const val EXTRA_ID = "id"
+//        const val EXTRA_EMAIL = "email"
+//    }
 
     private lateinit var binding : ActivitySignUpPhotoBinding
 

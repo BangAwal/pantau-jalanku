@@ -31,7 +31,7 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.firestore.FirebaseFirestore
-import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
+//import com.maulida.pantaujalanku.BuildConfig.MAPS_API_KEY
 import com.maulida.pantaujalanku.R
 import com.maulida.pantaujalanku.databinding.ActivityMapBinding
 import java.io.IOException
@@ -53,14 +53,14 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var polylineOptions: PolylineOptions
 
     private var isLocatePermission = false
-    private lateinit var polylinelist : List<LatLng>
+    //private lateinit var polylinelist : List<LatLng>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Places.initialize(this, "${MAPS_API_KEY}")
+        Places.initialize(this, "AIzaSyBJP-Tr60idUtUYhF0P8gFQ1Ya6Jd7KFw4")
         Places.isInitialized()
 
         firestore = FirebaseFirestore.getInstance()
@@ -137,7 +137,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 return
             }
             mMap.isMyLocationEnabled = true
-            mMap?.uiSettings?.isMyLocationButtonEnabled = false
+            mMap.uiSettings.isMyLocationButtonEnabled = false
 
             //marker potholes
             firestore.collection("report")
@@ -226,7 +226,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                                     if (task.isSuccessful){
                                         val latitude = task.result.latitude
                                         val longitude = task.result.longitude
-                                        GoogleDirection.withServerKey(MAPS_API_KEY)
+                                        GoogleDirection.withServerKey("AIzaSyBJP-Tr60idUtUYhF0P8gFQ1Ya6Jd7KFw4")
                                                 .from(LatLng(latitude, longitude))
                                                 .to(LatLng(address.latitude,address.longitude))
                                                 .transportMode(TransportMode.DRIVING)
@@ -306,11 +306,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             "mapActivity",
             "moveCamera : Moving camera to: lat: ${latLng.latitude}, long : ${latLng.longitude}"
         )
-        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
 
-        if (!title.equals("My Location")){
+        if (title != "My Location"){
             val option = MarkerOptions().position(latLng).title(title)
-            mMap?.addMarker(option)
+            mMap.addMarker(option)
         }
 
     }

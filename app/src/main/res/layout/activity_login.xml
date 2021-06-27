@@ -13,105 +13,123 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_arrow_back_24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
-
-    <TextView
-        android:id="@+id/tv_welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/poppins"
-        android:text="@string/welcome_back"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_back" />
-
-    <ImageView
-        android:id="@+id/img_login"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="35dp"
-        android:src="@drawable/pj_round"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_welcome"
-        tools:ignore="ContentDescription" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_login">
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/tv_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_round"
-            android:fontFamily="@font/poppins"
-            android:hint="@string/email_address"
-            android:inputType="textEmailAddress"
-            android:padding="15dp"
-            android:textSize="16sp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/tv_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/edit_text_round"
-            android:fontFamily="@font/poppins"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:padding="15dp"
-            android:textSize="16sp" />
-
-        <TextView
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins"
-            android:text="@string/or_login_with_email"
+            android:text="@string/welcome_back"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_back" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_google"
+        <ImageView
+            android:id="@+id/img_login"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/pj_round"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_welcome"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/button_google"
-            android:fontFamily="@font/poppins_semibold"
-            android:text="@string/continue_with_google"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_login">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/button_round"
-            android:fontFamily="@font/poppins_semibold"
-            android:text="@string/login"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    </LinearLayout>
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/tv_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_round"
+                    android:fontFamily="@font/poppins"
+                    android:hint="@string/email_address"
+                    android:inputType="textEmailAddress"
+                    android:padding="20dp"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/tv_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/edit_text_round"
+                    android:fontFamily="@font/poppins"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:padding="20dp"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/checkpass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/show_password"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button_round"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/login"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/or"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_google"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_google"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/continue_with_google"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.bottomBar.map.MapActivity">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".MapsActivity" />
-
 
     <ImageView
         android:id="@+id/ic_magnify"
@@ -29,7 +28,8 @@
         android:src="@drawable/ic_magnify"
         android:translationZ="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/ic_gps"
@@ -42,7 +42,7 @@
         android:src="@drawable/ic_baseline_my_location_24"
         android:translationZ="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ic_magnify" />
-
+        app:layout_constraintTop_toBottomOf="@+id/ic_magnify"
+        tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

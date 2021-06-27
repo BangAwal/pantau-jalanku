@@ -81,10 +81,10 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
 
         with(binding){
-            binding.navHome.setOnClickListener(this@HomeActivity)
-            binding.navUpload.setOnClickListener(this@HomeActivity)
-            binding.navMaps.setOnClickListener(this@HomeActivity)
-            binding.navProfile.setOnClickListener(this@HomeActivity)
+            navHome.setOnClickListener(this@HomeActivity)
+            navUpload.setOnClickListener(this@HomeActivity)
+            navMaps.setOnClickListener(this@HomeActivity)
+            navProfile.setOnClickListener(this@HomeActivity)
         }
     }
 
